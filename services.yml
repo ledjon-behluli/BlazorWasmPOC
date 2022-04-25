@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  
+  webapi:
+    build:
+      context: .
+      dockerfile: WebApi/Dockerfile
+    container_name: webapi
+    expose:
+      - 80
+    environment:
+      - VIRTUAL_HOST=api.mydomain.com
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=api.mydomain.com
+      - LETSENCRYPT_EMAIL=myemail@mydomain.com
+      
+  admin:
+    build:
+      context: .
+      dockerfile: Admin/Dockerfile
+    container_name: admin
+    depends_on: 
+      - webapi
+    expose:
+      - 80
+    environment:
+      - VIRTUAL_HOST=admin.mydomain.com
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=admin.mydomain.com
+      - LETSENCRYPT_EMAIL=myemail@mydomain.com
+      
+  portal:
+    build:
+      context: .
+      dockerfile: Portal/Dockerfile
+    container_name: portal
+    depends_on:
+      - webapi
+    expose:
+      - 80
+    environment:
+      - VIRTUAL_HOST=portal.mydomain.com
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=portal.mydomain.com
+      - LETSENCRYPT_EMAIL=myemail@mydomain.com
+      
+networks:
+  default:
+    name: my-network

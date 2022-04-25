@@ -1,0 +1,13 @@
+{
+  "Version": 3,
+  "ListAllProjects": false,
+  "MultiProjectConfigurations": {
+    "WebApi + Admin + Portal": {
+      "Projects": {
+        "WebApi": {},
+        "Admin": {},
+        "Portal": {}
+      }
+    }
+  }
+}

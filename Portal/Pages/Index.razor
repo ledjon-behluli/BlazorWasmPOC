@@ -1,0 +1,20 @@
+﻿@page "/"
+
+@inject HttpClient httpClient
+
+<PageTitle>Portal</PageTitle>
+
+<h1>Welcome to the Portal app.</h1>
+
+<button @onclick="GetMessageAsync">Click Me</button>
+<label>@message</label>
+
+@code {
+    private string message;
+
+    private async Task GetMessageAsync()
+    {
+        HttpResponseMessage response = await httpClient.GetAsync("message/portal");
+        message = await response.Content.ReadAsStringAsync();
+    }
+}

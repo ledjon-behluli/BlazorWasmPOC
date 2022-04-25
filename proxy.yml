@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  reverse-proxy:
+    image: nginxproxy/nginx-proxy:latest
+    container_name: reverse-proxy
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    
+  acme-companion:
+    image: nginxproxy/acme-companion:latest
+    container_name: acme-companion
+    restart: always
+    environment:
+      NGINX_PROXY_CONTAINER: reverse-proxy
+    volumes:
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs:rw
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+volumes:
+  conf:
+    driver: local
+  vhost:
+    driver: local
+  certs:
+    driver: local
+  acme:
+    driver: local
+  html:
+    driver: local
+    
+networks:
+  default:
+    name: my-network
